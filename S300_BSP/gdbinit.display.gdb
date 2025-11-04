@@ -28,5 +28,5 @@ set {unsigned int}0xE000ED08 = 0x20000000
 # monitor hwbp 0x00000003
 
 # Go!
-echo \n>>> Starting DISPLAY demo...\n
-continue
+#echo \n>>> Starting DISPLAY demo...\n
+#continue

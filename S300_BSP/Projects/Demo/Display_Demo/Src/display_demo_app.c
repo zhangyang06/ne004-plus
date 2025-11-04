@@ -24,7 +24,10 @@
 #include "face_tracker.h"
 #include "eyes.h"
 #include "display_demo_app.h"
+#include "gpio.h"
 
+void background_light();
+void *embedded_memset(void *dest, int value, uint32_t count);
 void display_demo_app_init(uint32_t (*get_millis)(void))
 {
     /* 摄像头上电与探测（失败则仅初始化显示链路） */
@@ -35,28 +38,44 @@ void display_demo_app_init(uint32_t (*get_millis)(void))
 
     /* 视频子系统（包含面板初始化） */
     printf("[S300][DisplayDemo] init video...\r\n");
+    background_light();
+    // embedded_memset((uint8_t *)DISP_RALPHA0_ADDR, 0xFF, 320*240);
+    // embedded_memset((uint8_t *)DISP_RALPHA1_ADDR, 0xFF, 320*240); 
+    // embedded_memset((uint8_t *)DISP_RFRAME0_ADDR, 0x00, 320*240 * 2);
+    // embedded_memset((uint8_t *)DISP_RFRAME1_ADDR, 0x00, 320*240 * 2); 
+    // embedded_memset((uint8_t *)DISP_WFRAME0_ADDR, 0x00, 320*240 * 2);
+    // embedded_memset((uint8_t *)DISP_WFRAME1_ADDR, 0x00, 320*240 * 2);
     init_video(EM_DVP, CAMREA_YUV422, C1080X720P);
 
-    /* M4 <-> DSP 邮箱通信与握手 */
-    init_mailbox(MAILBOX_BASE, 4, MAILBOX_IRQ_NONE);
-    set_dsp_warm_reset(true);
-    write_mailbox(MAILBOX_BASE, 0x5A5A5A5A);
+    // /* M4 <-> DSP 邮箱通信与握手 */
+    // init_mailbox(MAILBOX_BASE, 4, MAILBOX_IRQ_NONE);
+    // set_dsp_warm_reset(true);
+    // write_mailbox(MAILBOX_BASE, 0x5A5A5A5A);
 
-    /* LVGL + 显示绑定与背景色 */
-    (void)ui_display_init();
-    printf("[S300][DisplayDemo] LVGL %d.%d.%d (%s)\r\n", lv_version_major(), lv_version_minor(), lv_version_patch(), lv_version_info());
-    ui_display_set_bg_color(0xffc21e);
+    // /* LVGL + 显示绑定与背景色 */
+    // (void)ui_display_init();
+    // printf("[S300][DisplayDemo] LVGL %d.%d.%d (%s)\r\n", lv_version_major(), lv_version_minor(), lv_version_patch(), lv_version_info());
+    // ui_display_set_bg_color(0xffc21e);
 
-    /* 眼睛 UI */
-    eyes_set_spacing(38);
-    eyes_create();
+    // /* 眼睛 UI */
+    // eyes_set_spacing(38);
+    // eyes_create();
 
-    /* 人脸追踪初始化（依赖 eyes + mailbox；提供时间回调实现） */
-    face_tracker_init(get_millis);
+    // /* 人脸追踪初始化（依赖 eyes + mailbox；提供时间回调实现） */
+    // face_tracker_init(get_millis);
 
-    printf("[S300][DisplayDemo] LVGL started.\r\n");
-    printf("[S300][DisplayDemo] UART echo enabled on debug UART (CR->CRLF).\r\n");
-    printf("[S300][DisplayDemo] Command: goto <y_mid>  (move eyes midpoint vertically)\r\n");
+    // printf("[S300][DisplayDemo] LVGL started.\r\n");
+    // printf("[S300][DisplayDemo] UART echo enabled on debug UART (CR->CRLF).\r\n");
+    // printf("[S300][DisplayDemo] Command: goto <y_mid>  (move eyes midpoint vertically)\r\n");
+}
+
+
+void background_light()
+{
+    set_gpio_function(GPIOA,24,FUNCTION_2);//gpio alternate function
+    set_gpio_mode(GPIOA,24,GPIO_UP);// choose pull-up for gpio
+    set_gpio_direction(GPIOA,24,1);//gpio select output mode
+    set_gpio_data(GPIOA,24,0);//gpio out 0    
 }
 
 void display_demo_app_tick(void)
@@ -64,4 +83,22 @@ void display_demo_app_tick(void)
     /* uart_cmd_poll(); // 如需命令控制可启用 */
     face_tracker_poll();
     lv_timer_handler();
+}
+
+void *embedded_memset(void *dest, int value, uint32_t count)
+{
+    // 参数检查
+    if (dest == NULL || count == 0) {
+        return dest;
+    }
+    
+    uint8_t *byte_dest = (uint8_t *)dest;
+    uint8_t byte_value = (uint8_t)value;
+    
+    // 简单循环实现
+    while (count--) {
+        *byte_dest++ = byte_value;
+    }
+    
+    return dest;
 }

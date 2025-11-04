@@ -26,7 +26,7 @@ static volatile uint32_t g_tick_ms = 0;
 void SysTick_Handler(void)
 {
     g_tick_ms++;
-    lv_tick_inc(1);
+    // lv_tick_inc(1);
 }
 
 static inline uint32_t millis(void)
@@ -49,10 +49,10 @@ int main(void)
     /* App init: camera/video/mailbox/ui/eyes/face_tracker */
     display_demo_app_init(millis);
 
-    while (1)
-    {
-        display_demo_app_tick();
-        uint32_t t0 = millis();
-        while ((uint32_t)(millis() - t0) < 5u) { /* spin */ }
-    }
+    // while (1)
+    // {
+    //     display_demo_app_tick();
+    //     uint32_t t0 = millis();
+    //     while ((uint32_t)(millis() - t0) < 5u) { /* spin */ }
+    // }
 }
