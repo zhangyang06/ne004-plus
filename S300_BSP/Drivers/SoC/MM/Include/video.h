@@ -21,22 +21,22 @@ typedef uint8_t UINT8;
 #define BINNING_SIZE            (1) //binning = 4 @ Sensor image size (1280*1920) 尽量binning到足够小
 
 /* binning */
-#define BINNING_IMAGE_WIDTH         (288)
-#define BINNING_IMAGE_HEIGHT        (360)
+#define BINNING_IMAGE_WIDTH         (144)
+#define BINNING_IMAGE_HEIGHT        (180)
 /* sensor */
 #define SENSOR_IMAGE_WIDTH          (BINNING_IMAGE_WIDTH * (1U << BINNING_SIZE))
 #define SENSOR_IMAGE_HEIGHT         (BINNING_IMAGE_HEIGHT * (1U << BINNING_SIZE))
 /* downscale */
-#define DOWNSCALE_IMAGE_WIDTH       (240)
-#define DOWNSCALE_IMAGE_HEIGHT      (320)
+#define DOWNSCALE_IMAGE_WIDTH       (128)
+#define DOWNSCALE_IMAGE_HEIGHT      (160)
 /* display  */
 #define DISP_START_X                (0)
 #define DISP_START_Y                (0)
-#define DISP_IMAGE_WIDTH            (240)
-#define DISP_IMAGE_HEIGHT           (320)
+#define DISP_IMAGE_WIDTH            (128)
+#define DISP_IMAGE_HEIGHT           (160)
 /* snap */
-#define SNAP_IMAGE_WIDTH            (240)
-#define SNAP_IMAGE_HEIGHT           (320)
+#define SNAP_IMAGE_WIDTH            (128)
+#define SNAP_IMAGE_HEIGHT           (160)
 
 #define BINNING_LINE_MAX_SIZE       (1280)
 #define DOWNSCALE_FACTOR            (8192)
