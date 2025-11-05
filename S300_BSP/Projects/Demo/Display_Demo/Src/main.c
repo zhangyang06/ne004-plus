@@ -46,7 +46,7 @@ int main(void)
 
     init_psram(4,1);
     rcc_init_mm_pll(8, 400, 0, 3, 2); /* 100MHz */
-    rcc_init_dsp_pll(8, 400, 0, 2, 1); /* 300MHz */
+    rcc_init_dsp_pll(6, 768, 0, 2, 2); /* 300MHz */
 
 //    uint8_t *byte_ptr = (uint8_t *)test_addr;
 //    int j = 0;

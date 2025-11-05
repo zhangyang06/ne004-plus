@@ -22,12 +22,14 @@ static const uint32_t REG_F0 = (DSP_VIDEO_SS_BASE + 0x50u);
 static const uint32_t REG_F1 = (DSP_VIDEO_SS_BASE + 0x54u);
 
 static void fill_buffer(volatile uint16_t *frame,
-                        volatile uint8_t  *alpha,
+                        volatile uint16_t  *alpha,
                         size_t pixel_count,
                         uint16_t color,
-                        uint8_t alpha_value)
+                        uint16_t alpha_value)
 {
-    for (size_t i = 0; i < pixel_count; ++i) { frame[i] = color; alpha[i] = alpha_value; }
+    for (size_t i = 0; i < pixel_count; ++i) { frame[i] = color;}
+    for (size_t i = 0; i < pixel_count / 2; ++i) { alpha[i] = alpha_value; }
+
 }
 
 static void lvgl_flush_cb(lv_display_t * disp, const lv_area_t * area, uint8_t * px_map)
@@ -48,8 +50,8 @@ lv_display_t * ui_display_init(void)
 {
     volatile uint16_t* f0 = (volatile uint16_t*)DISP_RFRAME0_ADDR;
     volatile uint16_t* f1 = (volatile uint16_t*)DISP_RFRAME1_ADDR;
-    volatile uint8_t*  a0 = (volatile uint8_t*)DISP_RALPHA0_ADDR;
-    volatile uint8_t*  a1 = (volatile uint8_t*)DISP_RALPHA1_ADDR;
+    volatile uint16_t*  a0 = (volatile uint16_t*)DISP_RALPHA0_ADDR;
+    volatile uint16_t*  a1 = (volatile uint16_t*)DISP_RALPHA1_ADDR;
 
     s_f0 = f0; s_f1 = f1; s_a0 = a0; s_a1 = a1;
 
@@ -70,8 +72,8 @@ lv_display_t * ui_display_init(void)
     lv_display_set_flush_cb(disp, lvgl_flush_cb);
 
     /* Prepare initial frame buffers: white canvas */
-    fill_buffer(f0, a0, pixels, 0xFFFFu, 0xAAu);
-    fill_buffer(f1, a1, pixels, 0xFFFFu, 0xAAu);
+    fill_buffer(f0, a0, pixels, 0xFFFFu, 0xAAAAu);
+    fill_buffer(f1, a1, pixels, 0xFFFFu, 0xAAAAu);
 
     return disp;
 }

@@ -490,7 +490,7 @@ void init_high_camera_st77_lcd(emMM mm,emCameraFormatPro cameraPro,emMMProcessPr
     delay_ms(120);
     /* spi init */
     REG32(DSP_VIDEO_SS_BASE + 0x100) = 0xed56abea; 
-    REG32(DSP_VIDEO_SS_BASE + 0x104) = 0x063a3036;//0x063a0036 0x063ac036
+    REG32(DSP_VIDEO_SS_BASE + 0x104) = 0x063ac036;//0x063a0036 0x063ac036
     REG32(DSP_VIDEO_SS_BASE + 0x108) = 0x000c0cb2; 
     REG32(DSP_VIDEO_SS_BASE + 0x10c) = 0x35b73333;
     REG32(DSP_VIDEO_SS_BASE + 0x110) = 0x2cc032bb; 
@@ -536,9 +536,9 @@ void init_high_camera_st77_lcd(emMM mm,emCameraFormatPro cameraPro,emMMProcessPr
     // REG32(DSP_VIDEO_SS_BASE + 0x198) = EXTRACT_COMBINE_REG2(DISP_IMAGE_WIDTH + DISP_START_X - 1, DISP_START_Y);
     // REG32(DSP_VIDEO_SS_BASE + 0x19c) = EXTRACT_COMBINE_REG3(DISP_IMAGE_HEIGHT + DISP_START_Y - 1);
 
-    REG32(DSP_VIDEO_SS_BASE + 0x194) = 0x0100002A;
-    REG32(DSP_VIDEO_SS_BASE + 0x198) = 0x00002B3F;
-    REG32(DSP_VIDEO_SS_BASE + 0x19c) = 0x002CEF00;
+    REG32(DSP_VIDEO_SS_BASE + 0x194) = 0x0000002A;
+    REG32(DSP_VIDEO_SS_BASE + 0x198) = 0x00002BEF;
+    REG32(DSP_VIDEO_SS_BASE + 0x19c) = 0x002C3F01;
 
     // REG32(DSP_VIDEO_SS_BASE + 0x1a0) = 0x0;
     // REG32(DSP_VIDEO_SS_BASE + 0x1a4) = 0x0;
@@ -549,14 +549,14 @@ void init_high_camera_st77_lcd(emMM mm,emCameraFormatPro cameraPro,emMMProcessPr
     REG32(DSP_VIDEO_SS_BASE + 0x1c0) = 0x2580003c;
     REG32(DSP_VIDEO_SS_BASE + 0x1c4) = (DISP_IMAGE_WIDTH | (DISP_IMAGE_HEIGHT << 16));//0x1400168;//0xb40140;//0xa000f0;//0x14001e0;//0xa000f0;
     REG32(DSP_VIDEO_SS_BASE + 0x1d0) = 0x10000;
-    REG32(DSP_VIDEO_SS_BASE + 0x1e0) = 0x1;
+    REG32(DSP_VIDEO_SS_BASE + 0x1e0) = 0x0;
     // delay_ms(5);//arm_delay_us(100000);
     // REG32(DSP_VIDEO_SS_BASE + 0x100) = 0x0;
     // REG32(DSP_VIDEO_SS_BASE + 0x104) = 0x29;
     // REG32(DSP_VIDEO_SS_BASE + 0x1c0) = (0x1 | (11 << 23) | (1 << 29));
     // REG32(DSP_VIDEO_SS_BASE + 0x1e0) = 0x1;
     
-    REG32(DSP_VIDEO_SS_BASE + 0x70) = 0x1;//1;
+    REG32(DSP_VIDEO_SS_BASE + 0x70) = 0x0;//1;
     // REG32(DSP_VIDEO_SS_BASE + 0x50) = 0x1;//0;
     // REG32(DSP_VIDEO_SS_BASE + 0x54) = 0x1;//0;
 
