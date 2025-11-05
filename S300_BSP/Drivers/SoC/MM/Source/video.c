@@ -490,7 +490,7 @@ void init_high_camera_st77_lcd(emMM mm,emCameraFormatPro cameraPro,emMMProcessPr
     delay_ms(120);
     /* spi init */
     REG32(DSP_VIDEO_SS_BASE + 0x100) = 0xed56abea; 
-    REG32(DSP_VIDEO_SS_BASE + 0x104) = 0x063a2036;//0x063a0036 0x063ac036
+    REG32(DSP_VIDEO_SS_BASE + 0x104) = 0x063a3036;//0x063a0036 0x063ac036
     REG32(DSP_VIDEO_SS_BASE + 0x108) = 0x000c0cb2; 
     REG32(DSP_VIDEO_SS_BASE + 0x10c) = 0x35b73333;
     REG32(DSP_VIDEO_SS_BASE + 0x110) = 0x2cc032bb; 

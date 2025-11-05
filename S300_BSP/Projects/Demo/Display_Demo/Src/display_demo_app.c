@@ -27,6 +27,7 @@
 #include "gpio.h"
 
 void background_light();
+print_psram_dat(uint16_t *dest, uint32_t count);
 
 void display_demo_app_init(uint32_t (*get_millis)(void))
 {
@@ -46,34 +47,38 @@ void display_demo_app_init(uint32_t (*get_millis)(void))
     // embedded_memset((uint8_t *)DISP_WFRAME1_ADDR, 0x00, 320*240 * 2);
     init_video(EM_DVP, CAMREA_YUV422, C1080X720P);
 
-    while (1)
-    {
-        embedded_memset((uint8_t *)DISP_RFRAME0_ADDR, 0x00, 320*240 * 2);
-        REG32(DSP_VIDEO_SS_BASE + 0x50) = 0x1;//0;
-        embedded_memset((uint8_t *)DISP_RFRAME1_ADDR, 0xFF, 320*240 * 2); 
-        REG32(DSP_VIDEO_SS_BASE + 0x54) = 0x1;//0;
-    }
+    // while (1)
+    // {
+    //     // embedded_memset((uint16_t *)DISP_RFRAME0_ADDR, 0x0000, 320*240 * 2);
+    //     // REG32(DSP_VIDEO_SS_BASE + 0x50) = 0x1;//0;
+    //     // print_psram_dat((uint16_t *)DISP_RFRAME0_ADDR, 100);
+
+    //     // embedded_memset((uint16_t *)DISP_RFRAME1_ADDR, 0xFFFF, 320*240 * 2); 
+    //     // REG32(DSP_VIDEO_SS_BASE + 0x54) = 0x1;//0;
+    //     // print_psram_dat((uint16_t *)DISP_RFRAME1_ADDR, 100);
+
+    // }
     
     /* M4 <-> DSP 邮箱通信与握手 */
-    // init_mailbox(MAILBOX_BASE, 4, MAILBOX_IRQ_NONE);
-    // set_dsp_warm_reset(true);
-    // write_mailbox(MAILBOX_BASE, 0x5A5A5A5A);
+//     init_mailbox(MAILBOX_BASE, 4, MAILBOX_IRQ_NONE);
+//     set_dsp_warm_reset(true);
+//     write_mailbox(MAILBOX_BASE, 0x5A5A5A5A);
 
-    // /* LVGL + 显示绑定与背景色 */
-    // (void)ui_display_init();
-    // printf("[S300][DisplayDemo] LVGL %d.%d.%d (%s)\r\n", lv_version_major(), lv_version_minor(), lv_version_patch(), lv_version_info());
-    // ui_display_set_bg_color(0xffc21e);
+//     /* LVGL + 显示绑定与背景色 */
+//     (void)ui_display_init();
+//     printf("[S300][DisplayDemo] LVGL %d.%d.%d (%s)\r\n", lv_version_major(), lv_version_minor(), lv_version_patch(), lv_version_info());
+//     ui_display_set_bg_color(0xffc21e);
 
-    // /* 眼睛 UI */
-    // eyes_set_spacing(38);
-    // eyes_create();
+//     /* 眼睛 UI */
+//     eyes_set_spacing(38);
+//     eyes_create();
 
-    // /* 人脸追踪初始化（依赖 eyes + mailbox；提供时间回调实现） */
-    // face_tracker_init(get_millis);
+//     /* 人脸追踪初始化（依赖 eyes + mailbox；提供时间回调实现） */
+//     face_tracker_init(get_millis);
 
-    // printf("[S300][DisplayDemo] LVGL started.\r\n");
-    // printf("[S300][DisplayDemo] UART echo enabled on debug UART (CR->CRLF).\r\n");
-    // printf("[S300][DisplayDemo] Command: goto <y_mid>  (move eyes midpoint vertically)\r\n");
+//     printf("[S300][DisplayDemo] LVGL started.\r\n");
+//     printf("[S300][DisplayDemo] UART echo enabled on debug UART (CR->CRLF).\r\n");
+//     printf("[S300][DisplayDemo] Command: goto <y_mid>  (move eyes midpoint vertically)\r\n");
 }
 
 
@@ -99,8 +104,8 @@ void *embedded_memset(void *dest, int value, uint32_t count)
         return dest;
     }
     
-    uint8_t *byte_dest = (uint8_t *)dest;
-    uint8_t byte_value = (uint8_t)value;
+    uint16_t *byte_dest = (uint16_t *)dest;
+    uint16_t byte_value = (uint16_t)value;
     
     // 简单循环实现
     while (count--) {
@@ -108,4 +113,14 @@ void *embedded_memset(void *dest, int value, uint32_t count)
     }
     
     return dest;
+}
+
+
+print_psram_dat(uint16_t *dest, uint32_t count)
+{
+    for (uint32_t i = 0; i < count; i++) {
+        printf("addr: 0x%08X, val: 0x%02X\r\n", 
+            (unsigned int)(dest + i), 
+            dest[i]);
+    }
 }
