@@ -22,6 +22,11 @@
 /* When logging is off, set level to NONE to avoid redefinition warnings */
 #define LV_LOG_LEVEL          LV_LOG_LEVEL_NONE
 
+/* Enable object transform (rotation/scale) for overlay vertical text, etc. */
+#ifndef LV_USE_TRANSFORM
+#define LV_USE_TRANSFORM      1
+#endif
+
 /* Enable GIF decoder and widget */
 #ifndef LV_USE_GIF
 #define LV_USE_GIF            1
