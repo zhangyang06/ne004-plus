@@ -40,24 +40,8 @@ void display_demo_app_init(uint32_t (*get_millis)(void))
     /* 视频子系统（包含面板初始化） */
     printf("[S300][DisplayDemo] init video...\r\n");
     background_light();
-    // embedded_memset((uint8_t *)DISP_RALPHA0_ADDR, 0xFF, 320*240);
-    // embedded_memset((uint8_t *)DISP_RALPHA1_ADDR, 0xFF, 320*240); 
 
-    // embedded_memset((uint8_t *)DISP_WFRAME0_ADDR, 0x00, 320*240 * 2);
-    // embedded_memset((uint8_t *)DISP_WFRAME1_ADDR, 0x00, 320*240 * 2);
     init_video(EM_DVP, CAMREA_YUV422, C1080X720P);
-
-    // while (1)
-    // {
-    //     // embedded_memset((uint16_t *)DISP_RFRAME0_ADDR, 0x0000, 320*240 * 2);
-    //     // REG32(DSP_VIDEO_SS_BASE + 0x50) = 0x1;//0;
-    //     // print_psram_dat((uint16_t *)DISP_RFRAME0_ADDR, 100);
-
-    //     // embedded_memset((uint16_t *)DISP_RFRAME1_ADDR, 0xFFFF, 320*240 * 2); 
-    //     // REG32(DSP_VIDEO_SS_BASE + 0x54) = 0x1;//0;
-    //     // print_psram_dat((uint16_t *)DISP_RFRAME1_ADDR, 100);
-
-    // }
     
     /* M4 <-> DSP 邮箱通信与握手 */
     init_mailbox(MAILBOX_BASE, 4, MAILBOX_IRQ_NONE);
@@ -70,7 +54,7 @@ void display_demo_app_init(uint32_t (*get_millis)(void))
     ui_display_set_bg_color(0xffc21e);
 
     /* 眼睛 UI */
-    eyes_set_spacing(38);
+    eyes_set_spacing(60);
     eyes_create();
 
     /* 人脸追踪初始化（依赖 eyes + mailbox；提供时间回调实现） */

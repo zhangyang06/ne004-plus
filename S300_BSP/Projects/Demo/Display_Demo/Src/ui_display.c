@@ -69,7 +69,7 @@ static const uint32_t REG_F0 = (DSP_VIDEO_SS_BASE + 0x50u);
 static const uint32_t REG_F1 = (DSP_VIDEO_SS_BASE + 0x54u);
 
 /* LVGL 局部渲染用的双draw buffer（约屏幕 1/5 高度，按需调整） */
-#define DRAWBUF_LINES     30u  /* 兼顾帧率与限制：128x30=3840 <= 4095，减少每帧 flush 次数 */
+#define DRAWBUF_LINES     12u  /* 兼顾帧率与限制：128x30=3840 <= 4095，减少每帧 flush 次数 */
 #define BYTES_PER_PIXEL   2u  /* RGB565 */
 /* LVGL 要求 buffer 指针满足特定对齐（通常>=8B），使用 LV_ATTRIBUTE_MEM_ALIGN 保证 */
 LV_ATTRIBUTE_MEM_ALIGN static uint16_t s_drawbuf1[DISP_IMAGE_WIDTH * DRAWBUF_LINES] __attribute__((aligned(8)));
@@ -88,7 +88,7 @@ static volatile uint32_t s_stat_cpu_fallbacks = 0;
 static uint32_t          s_stat_last_report_ms = 0;
 /* 是否在屏幕角落显示统计信息（默认关闭，可在编译时 -DUI_STAT_OVERLAY=1 打开） */
 #ifndef UI_STAT_OVERLAY
-#define UI_STAT_OVERLAY 1
+#define UI_STAT_OVERLAY 0
 #endif
 #if UI_STAT_OVERLAY
 static lv_obj_t *        s_stat_label = NULL;
@@ -125,7 +125,7 @@ static void ui_keepalive_timer_cb(lv_timer_t * t)
 
 /* 统计叠加是否竖向显示（从上到下），默认开启；如需关闭可 -DUI_STAT_VERTICAL=0 */
 #ifndef UI_STAT_VERTICAL
-#define UI_STAT_VERTICAL 1
+#define UI_STAT_VERTICAL 
 #endif
 
 /* 选用 DMA0 的固定通道（与其它Demo/外设错开，避免冲突） */
@@ -358,12 +358,13 @@ static void lvgl_display_event_cb(lv_event_t * e)
 }
 
 static void fill_buffer(volatile uint16_t *frame,
-                        volatile uint8_t  *alpha,
+                        volatile uint16_t  *alpha,
                         size_t pixel_count,
                         uint16_t color,
-                        uint8_t alpha_value)
+                        uint16_t alpha_value)
 {
-    for (size_t i = 0; i < pixel_count; ++i) { frame[i] = color; alpha[i] = alpha_value; }
+    for (size_t i = 0; i < pixel_count; ++i) { frame[i] = color;}
+    for (size_t i = 0; i < pixel_count / 2; ++i) { alpha[i] = alpha_value; }
 }
 
 static void lvgl_flush_cb(lv_display_t * disp, const lv_area_t * area, uint8_t * px_map)
@@ -378,8 +379,8 @@ lv_display_t * ui_display_init(void)
 {
     volatile uint16_t* f0 = (volatile uint16_t*)DISP_RFRAME0_ADDR;
     volatile uint16_t* f1 = (volatile uint16_t*)DISP_RFRAME1_ADDR;
-    volatile uint8_t*  a0 = (volatile uint8_t*)DISP_RALPHA0_ADDR;
-    volatile uint8_t*  a1 = (volatile uint8_t*)DISP_RALPHA1_ADDR;
+    volatile uint8_t*  a0 = (volatile uint8_t*)DISP_RALPHA0_ADDR;   //应该是8bit，由于psram后面才使用16bit初始化
+    volatile uint8_t*  a1 = (volatile uint8_t*)DISP_RALPHA1_ADDR;   //应该是8bit，由于psram后面才使用16bit初始化
 
     s_f0 = f0; s_f1 = f1; s_a0 = a0; s_a1 = a1;
 
@@ -424,7 +425,7 @@ lv_display_t * ui_display_init(void)
         lv_obj_set_style_transform_angle(s_stat_label, 900, 0);
         #endif
 #endif
-        // lv_label_set_text(s_stat_label, "fps=  0   flush=  0\ncpu=  0%  mem=  0%");
+        lv_label_set_text(s_stat_label, "fps=  0   flush=  0\ncpu=  0%  mem=  0%");
     }
 #endif
 
@@ -438,8 +439,8 @@ lv_display_t * ui_display_init(void)
     UI_LOGI("INIT", "fb0=%p fb1=%p alpha0=%p alpha1=%p", s_f0, s_f1, s_a0, s_a1);
 
     /* Prepare initial frame buffers: white canvas */
-    fill_buffer(f0, a0, pixels, 0xFFFFu, 0xAAu);
-    fill_buffer(f1, a1, pixels, 0xFFFFu, 0xAAu);
+    fill_buffer(f0, (uint16_t *)a0, pixels, 0xFFFFu, 0xBBBBu);
+    fill_buffer(f1, (uint16_t *)a1, pixels, 0xFFFFu, 0xBBBBu);
 
     /* 初始显示 F0（front=0），渲染写入将落到 F1（back） */
     REG32(REG_F0) = 1u;
