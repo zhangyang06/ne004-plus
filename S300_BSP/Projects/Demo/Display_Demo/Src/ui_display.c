@@ -424,7 +424,7 @@ lv_display_t * ui_display_init(void)
         lv_obj_set_style_transform_angle(s_stat_label, 900, 0);
         #endif
 #endif
-        lv_label_set_text(s_stat_label, "fps=  0   flush=  0\ncpu=  0%  mem=  0%");
+        // lv_label_set_text(s_stat_label, "fps=  0   flush=  0\ncpu=  0%  mem=  0%");
     }
 #endif
 
