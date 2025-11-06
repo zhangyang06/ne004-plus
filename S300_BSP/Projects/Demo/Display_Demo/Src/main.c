@@ -41,7 +41,7 @@ static inline uint32_t millis(void)
 {
     return g_tick_ms;
 }
-#define test_addr         (0x80010000U)//0x80000000;
+
 int main(void)
 {
     /* Board init: clocks + debug UART for printf */
@@ -54,37 +54,6 @@ int main(void)
     init_psram(4,1);
     rcc_init_mm_pll(8, 400, 0, 3, 2); /* 100MHz */
     rcc_init_dsp_pll(6, 768, 0, 2, 2); /* 300MHz */
-
-//    uint8_t *byte_ptr = (uint8_t *)test_addr;
-//    int j = 0;
-
-   // 写入数据
-    // for (int i = 0; i < 320; i++)
-    // {
-    //     byte_ptr[i] = (uint8_t)j;
-    //     if(j == 127)
-    //     {
-    //         j = 0;
-    //     }
-    //     else
-    //     {
-    //         j++;
-    //     }
-    // }
-
-    // // 读取验证
-    // for(int i = 0; i < 320; i++)
-    // {
-    //     printf("addr: 0x%08X, val: 0x%02X\r\n", 
-    //         (unsigned int)(byte_ptr + i), 
-    //         byte_ptr[i]);
-    // }
-
-// while (1)
-// {
-//     /* code */
-// }
-
 
     /* App init: camera/video/mailbox/ui/eyes/face_tracker */
     display_demo_app_init(millis);
