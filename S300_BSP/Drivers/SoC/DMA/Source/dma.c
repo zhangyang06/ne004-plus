@@ -10,12 +10,14 @@ int dma_init(dma_idx_t d)
     S300_DMA_TypeDef *D = dma_get(d);
     /* Enable controller */
     D->DmaCfgReg = 0u; /* keep disabled until start */
-    /* Mask all interrupts for safety (legacy used 0xFF00 to mask channels) */
-    D->MaskTfr = 0xFF00u;
-    D->MaskBlock = 0xFF00u;
-    D->MaskSrcTran = 0xFF00u;
-    D->MaskDstTran = 0xFF00u;
-    D->MaskErr = 0xFF00u;
+    /* 根据手册：INT_MASK 位 = 0 表示 Mask(屏蔽)，=1 表示 Unmask(允许)。INT_MASK_WE 在 [15:8]。
+     * 初始化阶段全部屏蔽：写入 WE 位 + 数据位为 0。使用 0xFF00（WE=1，DATA=0）。
+     */
+    D->MaskTfr    = 0xFF00u; /* 所有通道传输完成中断屏蔽 */
+    D->MaskBlock  = 0xFF00u; /* 所有通道 Block 完成中断屏蔽 */
+    D->MaskSrcTran= 0xFF00u;
+    D->MaskDstTran= 0xFF00u;
+    D->MaskErr    = 0xFF00u;
     /* Clear any pending */
     D->ClearTfr = 0xFFu;
     D->ClearBlock = 0xFFu;
