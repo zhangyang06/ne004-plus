@@ -42,6 +42,6 @@ set {unsigned int}0x4000a018 = 1
 # monitor hwbp 0x00000003
 
 # Go!
-echo \n>>> Starting DISPLAY demo with DSP boot...\n
+#echo \n>>> Starting DISPLAY demo with DSP boot...\n
 # keep paused for inspection; uncomment to run automatically
-continue
+#continue

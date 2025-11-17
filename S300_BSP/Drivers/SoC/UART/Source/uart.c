@@ -2,6 +2,7 @@
 #include <stdbool.h>
 #include "../Include/uart.h"
 #include "../Include/uart_s300.h"
+#include "uart_buffer.h"
 
 static inline S300_UART_TypeDef *uart_dev(uart_idx_t idx)
 {
@@ -145,3 +146,31 @@ int uart_write(uart_idx_t idx, uart_type_t type, uint16_t data)
     (void)type;
     return 0;
 }
+
+uart_ring_buffer_t uart3_rx_buffer;
+
+/* 初始化（在 main 中调用一次） */
+void uart3_buffer_init(void)
+{
+    uart_buffer_init(&uart3_rx_buffer);
+}
+
+void uart_interupt_fun(void)
+{
+    S300_UART_TypeDef *U = uart_dev(3);
+    uart_buffer_t rx_buffer;
+    
+    // 检查接收中断
+    if ((U->IIR_FCR & 0x0Eu) == 0x04u) {
+        // 读取数据并立即回显
+        uint8_t data = U->RBR_THR_DLL & 0xFF;
+       /* 写入缓冲区 */
+        uart_buffer_write(&uart3_rx_buffer, data);
+
+        // uart_write(3, UARTTYPE_STD_SERIAL, data);  // 直接回显
+    }
+}
+
+
+
+

@@ -27,7 +27,7 @@ void board_clock_init(void)
     // set_apb_clock_div(1, 0);
     SystemCoreClockUpdate();
 }
-
+     
 void board_debug_uart_init(void)
 {
 #if BOARD_UART3_DEBUG_ENABLE
@@ -36,6 +36,10 @@ void board_debug_uart_init(void)
     board_uart3_pins_init();
     init_uart(UART_DEBUG_IDX, UARTTYPE_STD_SERIAL, rcc_get_clock(RCC_CLOCK_APB1), 115200);
     init_uart(3, UARTTYPE_STD_SERIAL, rcc_get_clock(RCC_CLOCK_APB1), 115200);
+    NVIC_ClearPendingIRQ(UART3_IRQn);
+    NVIC_SetPriority(UART3_IRQn, 4);
+    NVIC_EnableIRQ(UART3_IRQn);
+    set_uart_interrupt(3, false, true); // 使能接收中断
     // 关闭缓冲，避免半主机影响
     setvbuf(stdout, NULL, _IONBF, 0);
 #else
@@ -50,3 +54,5 @@ void board_init(void)
     /* 统一安全网：确保进入各 Demo 前全局中断已开启（防止早期启动路径或引导阶段残留 PRIMASK=1）。*/
     __enable_irq();
 }
+
+

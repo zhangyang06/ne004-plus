@@ -24,5 +24,5 @@ set $pc = *(unsigned int*)0x20000004
 # Optionally set VTOR to 0x20000000 (many servers do that on reset)
 set {unsigned int}0xE000ED08 = 0x20000000
 
-echo \n>>> Starting program...\n
-continue
+#echo \n>>> Starting program...\n
+#continue

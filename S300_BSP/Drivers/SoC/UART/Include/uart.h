@@ -43,6 +43,16 @@ typedef enum
     UART_FIFO_EN = 0x01,
 } uart_fifo_t;
 
+#define UART_BUFFER_SIZE 256
+typedef struct {
+    uint8_t buffer[UART_BUFFER_SIZE];
+    uint16_t head;          // 写指针
+    uint16_t tail;          // 读指针
+    uint16_t count;         // 数据量
+    uint16_t size;          // 缓冲区大小
+    bool overwrite;         // 是否允许覆盖旧数据
+} uart_buffer_t;
+
 /* API */
 int  uart_init(uart_idx_t idx, uart_type_t type, uint32_t sysclock_hz, uint32_t baud);
 void uart_set_baud(uart_idx_t idx, uint32_t sysclock_hz, uint32_t baud);
@@ -52,6 +62,8 @@ void uart_set_sir_mode(uart_idx_t idx, bool en);
 void uart_set_fifo(uart_idx_t idx, uart_fifo_t cfg);
 uint16_t uart_read(uart_idx_t idx, uart_type_t type);
 int  uart_write(uart_idx_t idx, uart_type_t type, uint16_t data);
+
+void uart_interupt_fun(void);
 
 /* Legacy inline aliases to ease porting (optional) */
 static inline int init_uart(int u, int t, uint32_t s, uint32_t b)

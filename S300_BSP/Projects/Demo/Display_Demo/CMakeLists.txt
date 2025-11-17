@@ -85,6 +85,7 @@ set(SRCS
     ${PROJECT_DIR}/Src/face_tracker.c
     ${PROJECT_DIR}/Src/uart_cmd.c
     ${PROJECT_DIR}/Src/display_demo_app.c
+    ${PROJECT_DIR}/Src/uart_buffer.c
 )
 
 # Auto-include all generated image assets
